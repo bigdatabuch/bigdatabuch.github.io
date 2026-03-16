@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Science mit Big Data</title>
+    <meta name="description" content="Code-Beispiele zum Buch 'Data Science mit Big Data' von Oliver Hummel, Marcus Kessel, Beate Navarro und Robert Butscher">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --dark-bg: #2c3e50;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 8rem 2rem 6rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-bg);
+            transform: translateY(-2px);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+        }
+
+        /* Features */
+        .features {
+            background: var(--light-bg);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        /* Content */
+        .content h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .content ul {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .content li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Book Info */
+        .book-info {
+            background: var(--primary-color);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .book-info h2 {
+            color: var(--white);
+        }
+
+        .book-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .book-detail {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .book-detail strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        /* Chapters */
+        .chapters {
+            background: var(--light-bg);
+        }
+
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .chapter-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .chapter-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .chapter-card p {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .chapter-links {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .chapter-links a {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .chapter-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Target Audience */
+        .audience {
+            text-align: center;
+        }
+
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .audience-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .audience-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Errata */
+        .errata {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin-top: 2rem;
+        }
+
+        .errata h3 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+        }
+
+        .errata p {
+            color: #856404;
+            font-size: 0.95rem;
+        }
+
+        /* Authors */
+        .authors {
+            background: var(--white);
+            text-align: center;
+        }
+
+        .authors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .author-card {
+            padding: 1.5rem;
+        }
+
+        .author-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .author-card a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .author-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-bg);
+            color: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .copyright {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--white);
+                flex-direction: column;
+                padding: 1rem 0;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                transform: translateY(-150%);
+                transition: transform 0.3s ease-in-out;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">Data Science mit Big Data</a>
+            <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+            <ul class="nav-links">
+                <li><a href="#home">Start</a></li>
+                <li><a href="#features">Vorteile</a></li>
+                <li><a href="#content">Inhalt</a></li>
+                <li><a href="#book">Das Buch</a></li>
+                <li><a href="#audience">Zielgruppe</a></li>
+                <li><a href="#authors">Autoren</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <h1>Data Science mit Big Data</h1>
+        <p>Techniken, Werkzeuge und Algorithmen zur Analyse großer Datenmengen</p>
+        <div class="hero-buttons">
+            <a href="#book" class="btn btn-primary">Mehr erfahren</a>
+            <a href="https://github.com/oliver-hummel/big_data_buch" target="_blank" class="btn btn-secondary">Code auf GitHub</a>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="features">
+        <h2 class="section-title">Was Sie erwartet</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Umfassender Überblick</h3>
+                <p>Über Big-Data-Technologien und -Architekturen</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💻</div>
+                <h3>Praktische Beispiele</h3>
+                <p>Code-Beispiele in Python, Java, R und mehr</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>Modern Stack</h3>
+                <p>Spark, Flink, Kafka, Delta Lake, NoSQL-Datenbanken</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>KI-Integration</h3>
+                <p>LLMs, RAG, Agenten und Fine-Tuning</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h3>DevOps & Betrieb</h3>
+                <p>Kubernetes, Docker, Testing & Monitoring</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <section id="content">
+        <h2 class="section-title">Inhalt</h2>
+        <div class="content">
+            <p><strong>"Data Science mit Big Data"</strong> verbindet theoretisch fundierte Konzepte mit praktischen Anwendungen – von den Grundlagen verteilter Systeme bis hin zu modernen KI-Technologien.</p>
+            
+            <h3>Kapitelübersicht mit Code-Beispielen</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background: var(--primary-color); color: var(--white);">
+                        <th style="padding: 1rem; text-align: left; border: 1px solid #ddd;">Kapitel</th>
+                        <th style="padding: 1rem; text-align: left; border: 1px solid #ddd;">Thema</th>
+                        <th style="padding: 1rem; text-align: left; border: 1px solid #ddd;">Code-Beispiele</th>
+                        <th style="padding: 1rem; text-align: left; border: 1px solid #ddd;">Notebook</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>1</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Gestatten, Data – Big Data</td><td style="padding: 1rem; border: 1px solid #ddd;">Google Trends Analyse, Big Data Use Cases</td><td style="padding: 1rem; border: 1px solid #ddd;"><a href="https://colab.research.google.com/drive/1i0Ps58-uQ8LrlESNdbpelbCoJVVQq8XY" target="_blank">Colab</a>, <a href="https://colab.research.google.com/drive/1_FB_UU_w37TzLQQTSNSLSb1ysvpJaFMX" target="_blank">Colab</a></td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>2</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Grundbegriffe verteilter Systeme</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>3</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Daten</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>4</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Vorgehensmodelle für Big Data</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>5</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Datenformate</td><td style="padding: 1rem; border: 1px solid #ddd;">CSV, JSON, Parquet, Avro (Pandas, PyArrow, Spark)</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>6</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Big Data-Management</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>7</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Data Warehouse</td><td style="padding: 1rem; border: 1px solid #ddd;">DuckDB, Python (OBT, Sternschema)</td><td style="padding: 1rem; border: 1px solid #ddd;"><a href="https://colab.research.google.com/drive/13R9qWj-Fg1NM14N0DJjdOqu9ubbZSCO-?usp=sharing" target="_blank">Colab</a>, <a href="https://colab.research.google.com/drive/14_TK9bW-DckERo4YLzrsh7hwlEeOUzYU?usp=sharing" target="_blank">Colab</a></td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>8</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Data Lake</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>9</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Data Lakehouse</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>10</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Data Mesh</td><td style="padding: 1rem; border: 1px solid #ddd;">Data Mesh Manager</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>11</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">NoSQL-Datenbanken</td><td style="padding: 1rem; border: 1px solid #ddd;">Redis, MongoDB, Neo4j, Cassandra, InfluxDB, Milvus, ArangoDB, OpenSearch, Delta Lake</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>12</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Kafka & Stream Processing</td><td style="padding: 1rem; border: 1px solid #ddd;">Kafka Producer/Consumer (Python)</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>13</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Verarbeitungsparadigmen</td><td style="padding: 1rem; border: 1px solid #ddd;">Hadoop, Spark, Flink, Ignite (Java, Python)</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>14</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Skalierbare Algorithmen</td><td style="padding: 1rem; border: 1px solid #ddd;">Morris-Counter, HyperLogLog, Bloom-Filter, t-digest (Java)</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>15</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Datenanalyse & Visualisierung</td><td style="padding: 1rem; border: 1px solid #ddd;">Matplotlib, Seaborn, ggplot2, Echtzeit-Monitoring</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>16</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Architekturwissen</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>17</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">Test & Betrieb</td><td style="padding: 1rem; border: 1px solid #ddd;">Kubernetes (minikube)</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                    <tr><td style="padding: 1rem; border: 1px solid #ddd;"><strong>18</strong></td><td style="padding: 1rem; border: 1px solid #ddd;">KI-basierte Systeme</td><td style="padding: 1rem; border: 1px solid #ddd;">Training, RAG, Agenten, MCP (Python)</td><td style="padding: 1rem; border: 1px solid #ddd;">—</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Book Info -->
+    <section id="book" class="book-info">
+        <h2 class="section-title">Das Buch</h2>
+        <p>Dieses Buch ist im gut sortierten Buchhandel und beispielsweise hier erhältlich:</p>
+        <div class="book-details">
+            <div class="book-detail">
+                <strong>Verlagsseite</strong>
+                <a href="https://www.hanser-fachbuch.de/fachbuch/artikel/9783446476400" target="_blank" style="color: var(--white);">hanser-fachbuch.de</a>
+            </div>
+            <div class="book-detail">
+                <strong>Amazon</strong>
+                <a href="https://www.amazon.de/Data-Science-mit-Big-Algorithmen/dp/3446476407" target="_blank" style="color: var(--white);">amazon.de</a>
+            </div>
+            <div class="book-detail">
+                <strong>Bücher.de</strong>
+                <a href="https://www.buecher.de/shop/home/artikeldetails/A1075047159" target="_blank" style="color: var(--white);">buecher.de</a>
+            </div>
+        </div>
+        <div class="book-details" style="margin-top: 2rem;">
+            <div class="book-detail">
+                <strong>ISBN</strong>
+                978-3-446-47640-0
+            </div>
+            <div class="book-detail">
+                <strong>Seiten</strong>
+                783 (Komplett in Farbe)
+            </div>
+            <div class="book-detail">
+                <strong>Auflage</strong>
+                1. Auflage (2026)
+            </div>
+        </div>
+    </section>
+
+    <!-- Target Audience -->
+    <section id="audience" class="audience">
+        <h2 class="section-title">Für wen ist dieses Buch?</h2>
+        <div class="audience-grid">
+            <div class="audience-card">
+                <h3>🎯 Data Scientists & Engineers</h3>
+                <p>Die einen umfassenden Überblick über Big Data-Technologien erhalten möchten</p>
+            </div>
+            <div class="audience-card">
+                <h3>💻 Entwickler</h3>
+                <p>Praktische Code-Beispiele für verteilte Systeme suchen</p>
+            </div>
+            <div class="audience-card">
+                <h3>🎓 Studenten</h3>
+                <p>(Bachelor/Master) im Bereich Data Science, Informatik oder Wirtschaftsinformatik</p>
+            </div>
+            <div class="audience-card">
+                <h3>🏗️ Architekten & Tech Leads</h3>
+                <p>Sich mit Big-Data-Architekturen auseinandersetzen</p>
+            </div>
+            <div class="audience-card">
+                <h3>⚙️ DevOps Engineers</h3>
+                <p>Big-Data-Systeme betreiben möchten</p>
+            </div>
+        </div>
+        
+        <h3 style="margin-top: 2rem; color: var(--primary-color);">Vorkenntnisse</h3>
+        <ul style="max-width: 600px; margin: 1rem auto; text-align: left;">
+            <li>Grundkenntnisse in <strong>Python</strong> (für die meisten Beispiele)</li>
+            <li>Grundlegendes Verständnis von <strong>Datenbanken</strong> und <strong>Verteilte Systeme</strong> hilft, ist aber nicht zwingend erforderlich</li>
+            <li>Für Java-Beispiele: Grundkenntnisse in <strong>Java</strong></li>
+            <li>Für R-Beispiele: Grundkenntnisse in <strong>R</strong></li>
+        </ul>
+    </section>
+
+    <!-- Errata -->
+    <section style="max-width: 800px; margin: 2rem auto;">
+        <div class="errata">
+            <h3>📝 Errata (Updates)</h3>
+            <p>In Abschnitt 14.3 auf Seite 542 muss es natürlich <code>bf.put(4)</code> bzw. <code>bf.put(7)</code> statt <code>filter.put(...)</code> heißen.</p>
+        </div>
+    </section>
+
+    <!-- Authors -->
+    <section id="authors" class="authors">
+        <h2 class="section-title">Autoren</h2>
+        <div class="authors-grid">
+            <div class="author-card">
+                <h3>Oliver Hummel</h3>
+                <a href="https://www.linkedin.com/in/oliver-hummel-hsma" target="_blank">LinkedIn</a>
+            </div>
+            <div class="author-card">
+                <h3>Marcus Kessel</h3>
+                <a href="https://www.linkedin.com/in/marcus-kessel-307609312/" target="_blank">LinkedIn</a>
+            </div>
+            <div class="author-card">
+                <h3>Beate Navarro Bullock</h3>
+                <a href="https://www.linkedin.com/in/beate-navarro-9326ba112/" target="_blank">LinkedIn</a>
+            </div>
+            <div class="author-card">
+                <h3>Robert Butscher</h3>
+                <a href="https://www.linkedin.com/in/prof-dr-robert-butscher-09a7481b1/" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#home">Start</a>
+                <a href="#features">Vorteile</a>
+                <a href="#content">Inhalt</a>
+                <a href="#book">Das Buch</a>
+                <a href="#authors">Autoren</a>
+            </div>
+            <p class="copyright">© 2026 Data Science mit Big Data. Alle Rechte vorbehalten.</p>
+            <p class="copyright">Letzte Aktualisierung: 14. März 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            });
+        });
+
+        // Add fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
